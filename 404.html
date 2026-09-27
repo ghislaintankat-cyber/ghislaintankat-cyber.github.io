@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JobMarket Cameroon</title>
+<meta name="robots" content="noindex,follow">
+<meta name="theme-color" content="#0A0A0F">
+<!-- ═══════════════════════════════════════════════════════════════════
+     RATTRAPAGE DES ADRESSES MAL TAPÉES — JobMarket Cameroon
+     ═══════════════════════════════════════════════════════════════════
+     Cette page est le 404.html du SITE RACINE du compte
+     (dépôt « ghislaintankat-cyber.github.io »).
+
+     Particularité de GitHub Pages qui rend tout ceci possible : quand un
+     visiteur demande une adresse du domaine qui ne correspond à AUCUN
+     dépôt — par exemple /jobmarket-cameroon/ ou /jobmarket-cameroun/ —
+     c'est CE fichier qui est servi. On peut donc rattraper toutes les
+     fautes de casse et d'orthographe avec un seul dépôt.
+
+     Pourquoi ce n'était pas faisable autrement : GitHub interdit de créer
+     un dépôt « jobmarket-cameroon » tant que « Jobmarket-cameroon »
+     existe (les noms de dépôts sont uniques sans tenir compte de la
+     casse). Un dépôt miroir en minuscules est donc IMPOSSIBLE.
+     ═══════════════════════════════════════════════════════════════════ -->
+<style>
+  html,body{margin:0;height:100%;background:#0A0A0F;color:#F0F0F8;
+            font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+  .c{height:100%;display:flex;flex-direction:column;align-items:center;
+     justify-content:center;gap:14px;text-align:center;padding:24px}
+  .logo{width:92px;height:92px;border:3px solid #FFD700;border-radius:22px;
+        display:flex;align-items:center;justify-content:center;
+        font-size:36px;font-weight:800;color:#FFD700;letter-spacing:1px}
+  h1{margin:0;font-size:20px;color:#FFD700}
+  p{margin:0;font-size:14px;color:#9999BC;max-width:320px;line-height:1.5}
+  a{display:inline-block;margin-top:8px;background:#25D366;color:#062814;
+    text-decoration:none;font-weight:800;padding:14px 28px;border-radius:26px}
+</style>
+</head>
+<body>
+  <div class="c">
+    <div class="logo">JM</div>
+    <h1>JobMarket Cameroon</h1>
+    <p id="msg">Redirection en cours…</p>
+    <a id="go" href="https://ghislaintankat-cyber.github.io/Jobmarket-cameroon/">Ouvrir l'application</a>
+  </div>
+
+<script>
+// Calcule l'adresse vers laquelle renvoyer, ou null s'il ne faut pas rediriger.
+// Fonction volontairement pure (elle ne lit rien d'autre que son argument) :
+// c'est elle qui porte toute la décision, donc c'est elle qui est testée par
+// smoke-redirection.js — sans navigateur et sans réseau.
+function jmcRedirCible(href) {
+  var CIBLE = "https://ghislaintankat-cyber.github.io/Jobmarket-cameroon/";
+  try {
+    var s = String(href || "");
+    // on enlève « https://domaine » s'il est présent : on ne garde que le chemin
+    s = s.replace(/^[a-z]+:\/\/[^\/]*/i, "");
+    var hash = "", search = "";
+    var iH = s.indexOf("#");
+    if (iH !== -1) { hash = s.slice(iH); s = s.slice(0, iH); }
+    var iQ = s.indexOf("?");
+    if (iQ !== -1) { search = s.slice(iQ); s = s.slice(0, iQ); }
+    var bouts = s.replace(/^\/+/, "").split("/");
+    var premier = bouts[0] || "";
+    // GARDE ANTI-BOUCLE : si l'adresse est DÉJÀ la bonne, on ne redirige pas.
+    // Sans ça, une panne momentanée du site ferait tourner le navigateur en
+    // rond indéfiniment.
+    if (premier === "Jobmarket-cameroon") return null;
+    // « JOBMARKET_Cameroun », « jobmarket-cameroon », « JobMarketCameroun »…
+    // tout ce qui commence par « jobmarket » une fois mis en minuscules et
+    // débarrassé des tirets est considéré comme une tentative d'aller sur
+    // l'application.
+    var norm = premier.toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (norm.indexOf("jobmarket") !== 0) return null;
+    // On conserve le sous-chemin, le « ?id=… » d'un profil partagé et le
+    // « #job=… » d'une annonce partagée : sinon le lien WhatsApp d'un artisan
+    // renverrait sur l'accueil au lieu de sa fiche.
+    var reste = bouts.slice(1).join("/");
+    return CIBLE + reste + search + hash;
+  } catch (e) {
+    return null;
+  }
+}
+
+(function () {
+  try {
+    var cible = jmcRedirCible(location.href);
+    var go = document.getElementById("go");
+    var msg = document.getElementById("msg");
+    if (cible) {
+      if (go) go.setAttribute("href", cible);
+      location.replace(cible);
+    } else if (msg) {
+      // Adresse sans rapport avec l'application : pas de redirection
+      // automatique (on n'impose rien), mais le bouton reste disponible.
+      msg.textContent = "Cette page n'existe pas. L'application est ici :";
+    }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
